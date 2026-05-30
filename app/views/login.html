@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aiAgentOS - 登录</title>
+    <link rel="stylesheet" href="../static/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/dist/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/dist/css/layui.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(63, 94, 251, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(252, 70, 107, 0.10) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 80%, rgba(72, 219, 251, 0.08) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+            z-index: 0;
+        }
+        @keyframes bgPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #3f5efb, #fc466b);
+            box-shadow: 0 8px 32px rgba(63, 94, 251, 0.35);
+            margin-bottom: 16px;
+        }
+        .login-header .logo-icon i {
+            font-size: 36px;
+            color: #fff;
+        }
+        .login-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .login-header p {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 14px;
+            margin: 0;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 36px 32px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        .login-card .form-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+        .login-card .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .login-card .input-group {
+            position: relative;
+        }
+        .login-card .input-group .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .login-card .form-control {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px 0 42px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .login-card .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(63, 94, 251, 0.6);
+            box-shadow: 0 0 0 3px rgba(63, 94, 251, 0.15);
+        }
+        .login-card .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-login {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3f5efb, #fc466b);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(63, 94, 251, 0.4);
+        }
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-footer a {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .login-footer a:hover {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .login-footer .divider {
+            color: rgba(255, 255, 255, 0.25);
+            margin: 0 8px;
+        }
+        .error-msg {
+            color: #fc466b;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+        .layui-layer-dialog {
+            border-radius: 12px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-header">
+            <div class="logo-icon">
+                <i class="fa fa-cogs"></i>
+            </div>
+            <h1>aiAgentOS</h1>
+            <p>智能 Agent 业务操作系统</p>
+        </div>
+        <div class="login-card">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <div class="input-group">
+                        <span class="input-icon"><i class="fa fa-user-o"></i></span>
+                        <input type="text" class="form-control" id="username" placeholder="请输入用户名" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <div class="input-group">
+                        <span class="input-icon"><i class="fa fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" placeholder="请输入密码" autocomplete="off" required>
+                    </div>
+                    <div class="error-msg" id="errorMsg"></div>
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fa fa-sign-in"></i> 登 录
+                </button>
+            </form>
+        </div>
+        <div class="login-footer">
+            <a href="#">忘记密码？</a>
+            <span class="divider">|</span>
+            <a href="#" id="goRegister">注册账号</a>
+        </div>
+    </div>
+
+    <script src="../static/dist/js/jquery.min.js"></script>
+    <script src="../static/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/dist/js/layui.js"></script>
+    <script>
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+
+            $('#loginForm').on('submit', function (e) {
+                e.preventDefault();
+
+                var username = $('#username').val().trim();
+                var password = $('#password').val().trim();
+
+                if (!username || !password) {
+                    layer.msg('请输入用户名和密码', { icon: 2, anim: 6 });
+                    return;
+                }
+
+                var $btn = $('#loginBtn');
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> 登录中...');
+
+                $.ajax({
+                    url: '/api/v1/auth/login',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ username: username, password: password }),
+                    success: function (res) {
+                        localStorage.setItem('access_token', res.access_token);
+                        layer.msg('登录成功', { icon: 1, anim: 6 }, function () {
+                            window.location.href = '/index';
+                        });
+                    },
+                    error: function (xhr) {
+                        var msg = '登录失败，请检查用户名和密码';
+                        try {
+                            var err = JSON.parse(xhr.responseText);
+                            if (err.detail) msg = err.detail;
+                        } catch (_) {}
+                        $('#errorMsg').text(msg).show();
+                        layer.msg(msg, { icon: 2, anim: 6 });
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false).html('<i class="fa fa-sign-in"></i> 登 录');
+                    }
+                });
+            });
+
+            $('#goRegister').on('click', function (e) {
+                e.preventDefault();
+                layer.open({
+                    type: 1,
+                    title: '注册新账号',
+                    area: ['420px', '380px'],
+                    shadeClose: true,
+                    content: '\
+                    <div style="padding:20px 24px 10px;">\
+                        <div style="margin-bottom:14px;">\
+                            <input type="text" id="regUsername" class="layui-input" placeholder="用户名" style="height:44px;border-radius:8px;">\
+                        </div>\
+                        <div style="margin-bottom:14px;">\
+                            <input type="email" id="regEmail" class="layui-input" placeholder="邮箱" style="height:44px;border-radius:8px;">\
+                        </div>\
+                        <div style="margin-bottom:14px;">\
+                            <input type="password" id="regPassword" class="layui-input" placeholder="密码（至少6位）" style="height:44px;border-radius:8px;">\
+                        </div>\
+                        <div style="margin-bottom:18px;">\
+                            <input type="password" id="regPassword2" class="layui-input" placeholder="确认密码" style="height:44px;border-radius:8px;">\
+                        </div>\
+                        <button class="layui-btn layui-btn-fluid" id="registerBtn" style="height:44px;border-radius:10px;background:linear-gradient(135deg,#3f5efb,#fc466b);">注册</button>\
+                    </div>',
+                    success: function (layero) {
+                        layero.find('#registerBtn').on('click', function () {
+                            var u = layero.find('#regUsername').val().trim();
+                            var e = layero.find('#regEmail').val().trim();
+                            var p = layero.find('#regPassword').val().trim();
+                            var p2 = layero.find('#regPassword2').val().trim();
+                            if (!u || !e || !p) { layer.msg('请完整填写信息', { icon: 2 }); return; }
+                            if (p !== p2) { layer.msg('两次密码不一致', { icon: 2 }); return; }
+                            $.ajax({
+                                url: '/api/v1/auth/register',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ username: u, email: e, password: p }),
+                                success: function () {
+                                    layer.msg('注册成功，请登录', { icon: 1 }, function () {
+                                        layer.closeAll();
+                                    });
+                                },
+                                error: function (xhr) {
+                                    var msg = '注册失败';
+                                    try { var err = JSON.parse(xhr.responseText); if (err.detail) msg = err.detail; } catch (_) {}
+                                    layer.msg(msg, { icon: 2 });
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
